@@ -1,0 +1,8 @@
+﻿mysql -uroot -proot123 -e "drop database if exists springboot-mybatis"
+
+mysql -uroot -proot123 -e "create database springboot-mybatis DEFAULT CHARACTER SET utf8"
+
+mvn package
+
+mvn dbdeploy:update
+

@@ -1,0 +1,1 @@
+mvn dbdeploy:update

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="dbdeploy_elf_mysql" default="default">
+    <path id="mysql.classpath">
+        <fileset dir="${base.dir}/mysql">
+            <include name="mysql-connector-java*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="dbdeploy.classpath">
+        <!-- include the dbdeploy-ant jar -->
+        <fileset dir="${base.dir}">
+            <include name="dbdeploy-ant-*.jar"/>
+        </fileset>
+
+        <!-- the dbdeploy task also needs the database driver jar on the classpath -->
+        <path refid="mysql.classpath"/>
+
+    </path>
+
+    <taskdef name="dbdeploy" classname="com.dbdeploy.AntTarget" classpathref="dbdeploy.classpath"/>
+
+    <target name="default" depends="update-database"/>
+    <target name="clean-and-create" depends="clean, update-database"/>
+
+    <target name="clean" depends="drop-and-create-database, create-changelog-table"/>
+
+    <target name="create-changelog-table">
+        <sql driver="${db.driver}" url="${db.url}"
+             userid="${db.username}" password="${db.password}" classpathref="mysql.classpath">
+            <fileset file="${base.dir}/scripts/createSchemaVersionTable.mysql.sql"/>
+        </sql>
+    </target>
+
+    <target name="update-database" description="generate a sql upgrade script">
+
+        <!-- if you don't specify an output file, dbdeploy will apply the changes for you
+
+        you may need to specify delimiter and delimitertype for your scripts to be split properly - these
+         task the same as in the ant sql task, see http://ant.apache.org/manual/CoreTasks/sql.html
+        -->
+        <dbdeploy driver="${db.driver}" url="${db.url}"
+                  userid="${db.username}"
+                  password="${db.password}"
+                  dir="${db.sqlfolder}"
+        />
+
+    </target>
+
+
+    <target name="dump-tables">
+        <sql driver="${db.driver}" url="${db.url}"
+             userid="${db.username}" password="${db.password}" print="true" classpathref="mysql.classpath">
+            select * from changelog;
+        </sql>
+    </target>
+
+
+    <target name="drop-and-create-database">
+
+        <sql onerror="continue" driver="${db.driver}" url="${db.url}"
+             userid="${db.username}" password="${db.password}" print="true" classpathref="oracle.classpath">
+            drop table changelog;
+        </sql>
+    </target>
+
+</project>

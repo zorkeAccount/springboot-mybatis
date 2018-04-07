@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.caizhaoke</groupId>
+    <artifactId>dbtools</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <description>dbdeploy util and code-generator util and mybatis-generator plugin</description>
+    <name>${project.artifactId}</name>
+
+    <properties>
+        <db.url>jdbc:mysql://127.0.0.1:3306/springboot-mybatis?autoReconnect=true&amp;characterEncoding=UTF-8</db.url>
+        <db.usr>root</db.usr>
+        <db.pwd>root123</db.pwd>
+
+        <dbdeploy.version>3.0M3</dbdeploy.version>
+
+        <mysql.connector.version>5.1.27</mysql.connector.version>
+        <mybatis.jdbc.location>
+            <!--${user.home}/.m2/repository/mysql/mysql-connector-java/${mysql.connector.version}/mysql-connector-java-${mysql.connector.version}.jar-->
+            ${user.dir}/dbdeploy-3.0M3/mysql/mysql-connector-java-${mysql.connector.version}.jar
+        </mybatis.jdbc.location>
+        <db.driver-class-name>com.mysql.jdbc.Driver</db.driver-class-name>
+
+        <target.project>src/main/java</target.project>
+        <target.resources>src/main/resources</target.resources>
+
+        <!--add  maven release 永久解决每次都是手动去更改Language Level的问题-->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <encoding>UTF-8</encoding>
+    </properties>
+
+
+    <dependencies>
+        <!--MySQL:mysql-connector-java-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <!--自定义connector版本 for mybatis generator-->
+            <version>${mysql.connector.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--for dbtools to auto generator mybatis-->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>1.3.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--for dbtools to auto generator mybatis-->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.4.6</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!--maven-dbdeploy-plugin for dbdeploy-->
+            <plugin>
+                <groupId>com.dbdeploy</groupId>
+                <artifactId>maven-dbdeploy-plugin</artifactId>
+                <version>${dbdeploy.version}</version>
+                <configuration>
+                    <scriptdirectory>./sql</scriptdirectory>
+                    <name>${dbchangefile.name}</name>
+                    <encoding>utf-8</encoding>
+                    <lineEnding>lf</lineEnding>
+
+                    <outputfile>./result/apply.sql</outputfile>
+                    <undoOutputfile>./result/undo.sql</undoOutputfile>
+                    <driver>com.mysql.jdbc.Driver</driver>
+                    <url>${db.url}</url>
+                    <userid>${db.usr}</userid>
+                    <password>${db.pwd}</password>
+
+                    <dbms>mysql</dbms>
+                    <delimiter>/</delimiter>
+                    <delimiterType>row</delimiterType>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.dbdeploy</groupId>
+                        <artifactId>dbdeploy-core</artifactId>
+                        <version>${dbdeploy.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>${mysql.connector.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <!--maven-antrun-plugin for dbdeploy-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.3</version>
+                <executions>
+                    <execution>
+                        <id>ant-build</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <property name="db.driver" value="com.mysql.jdbc.Driver"/>
+                                <property name="db.url" value="${db.url}"/>
+                                <property name="db.username" value="${db.usr}"/>
+                                <property name="db.password" value="${db.pwd}"/>
+                                <property name="base.dir" value="dbdeploy-3.0M3"/>
+                                <property name="compile_classpath" refid="maven.compile.classpath"/>
+                                <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                                <property name="test_classpath" refid="maven.test.classpath"/>
+                                <property name="plugin_classpath" refid="maven.plugin.classpath"/>
+                                <property name="artifactId" value="${project.artifactId}"/>
+                                <property name="build.compiler" value="extJavac"/>
+                                <ant antfile="dbdeploy-3.0M3/mysql/build.xml">
+                                    <target name="create-changelog-table"/>
+                                </ant>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--mybatis generator-->
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.3.2</version>
+                <configuration>
+                    <!--允许移动生成的文件 -->
+                    <verbose>true</verbose>
+                    <!-- 是否覆盖 -->
+                    <overwrite>true</overwrite>
+                    <!-- 自动生成的配置 -->
+                    <configurationFile>
+                        src/main/resources/config/mybatisGeneratorConfig.xml
+                    </configurationFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
