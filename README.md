@@ -14,6 +14,6 @@ spring boot &amp;&amp; mybatis with mysql,redis,activemq and etc.
 6. 使用mybatis-generator 插件自动创建代码entity及mapper代码：首先配置pom.xml中的<target.package.name>，作为该表业务所处的包名；然后
 IDEA -> Maven Projects -> dbtools -> Plugins -> mybatis-generator即可创建代码；到相应的包下即可以查看生成的代码；然后，在service层
 即可对生成的代码进行调用，以实现基本的增删改查操作
-7. 较6而言推荐使用7，使用codeGenerator工具自动创建controller、service、mapper、entity代码：首先配置ConfigConstant中的数据库连接信息
+7. 较6而言推荐使用7，使用CodeGenerator工具自动创建controller、service、mapper、entity代码：首先配置ConfigConstant中的数据库连接信息
 和包名，以及中的一些路径信息；然后在CodeGenerator的main中输入相应的表名，运行main方法即可生成代码；然后，生成的代码放在相应的springboot
-或者springMVC项目(记得需要配置相关的依赖并且把common下的文件拷到相应的工程目录中)下，即可可以执行运行使用【将在下一步会给出相关的工程代码示例】
+或者springMVC项目(记得需要配置相关的依赖并且把common下的文件拷到相应的工程目录中)下，即可可以执行运行使用如项目kf中就是通过该通过直接生成的!
