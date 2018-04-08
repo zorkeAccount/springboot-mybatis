@@ -43,7 +43,7 @@
             targetProject     指定在该项目下所在的路径
         -->
         <!-- 生成实体类地址 -->
-        <javaModelGenerator targetPackage="cn.caizhaoke.entity" targetProject="${target.project}">
+        <javaModelGenerator targetPackage="${target.package.name}.entity" targetProject="${target.project}">
             <!-- 是否允许子包让schema作为包的后缀，即targetPackage.schemaName.tableName -->
             <property name="enableSubPackages" value="false"/>
             <!-- 是否对model添加 构造函数 -->
@@ -55,7 +55,7 @@
         </javaModelGenerator>
 
         <!--Mapper映射文件生成所在的目录 为每一个数据库的表生成对应的SqlMap文件 -->
-        <sqlMapGenerator targetPackage="mapper" targetProject="${target.resources}">
+        <sqlMapGenerator targetPackage="${target.package.name}.mapper" targetProject="${target.project}">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
@@ -65,7 +65,7 @@
                 type="MIXEDMAPPER",生成基于注解的Java Model 和相应的Mapper对象
                 type="XMLMAPPER",生成SQLMap XML文件和独立的Mapper接口
         -->
-        <javaClientGenerator targetPackage="cn.caizhaoke.mapper" targetProject="${target.project}" type="XMLMAPPER">
+        <javaClientGenerator targetPackage="${target.package.name}.mapper" targetProject="${target.project}" type="XMLMAPPER">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>

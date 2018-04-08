@@ -16,23 +16,27 @@
         <db.usr>root</db.usr>
         <db.pwd>root123</db.pwd>
 
+        <mysql.connector.version>5.1.27</mysql.connector.version>
+        <db.driver-class-name>com.mysql.jdbc.Driver</db.driver-class-name>
+
         <dbdeploy.version>3.0M3</dbdeploy.version>
 
-        <mysql.connector.version>5.1.27</mysql.connector.version>
         <mybatis.jdbc.location>
             <!--${user.home}/.m2/repository/mysql/mysql-connector-java/${mysql.connector.version}/mysql-connector-java-${mysql.connector.version}.jar-->
             ${user.dir}/dbdeploy-3.0M3/mysql/mysql-connector-java-${mysql.connector.version}.jar
         </mybatis.jdbc.location>
-        <db.driver-class-name>com.mysql.jdbc.Driver</db.driver-class-name>
+
 
         <target.project>src/main/java</target.project>
         <target.resources>src/main/resources</target.resources>
+        <target.package.name>cn.caizhaoke.one</target.package.name>
 
         <!--add  maven release 永久解决每次都是手动去更改Language Level的问题-->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <encoding>UTF-8</encoding>
+        <spring.framework.version>4.2.0.RELEASE</spring.framework.version>
     </properties>
 
 
@@ -46,23 +50,77 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!--for dbtools to auto generator mybatis-->
+        <!--for dbtools to auto generator mybatis plugins-->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>1.3.2</version>
-            <exclusions>
+          <!--  <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-api</artifactId>
                 </exclusion>
-            </exclusions>
+            </exclusions>-->
         </dependency>
-        <!--for dbtools to auto generator mybatis-->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
             <version>3.4.6</version>
+        </dependency>
+
+        <!--for dbtools to auto generator mybatis CodeGenerator.java-->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.23</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-core</artifactId>
+            <version>1.3.5</version>
+        </dependency>
+
+        <!--for CodeGenerator.java 生成的代码能够使用-->
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper</artifactId>
+            <version>3.4.2</version>
+        </dependency>
+
+
+        <!--常用工具类依赖jar包 for CodeGenerator.java-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.framework.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.framework.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>4.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>23.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.6</version>
+        </dependency>
+        <!--阿里 FastJson依赖 for Result.java-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.44</version>
         </dependency>
     </dependencies>
 
