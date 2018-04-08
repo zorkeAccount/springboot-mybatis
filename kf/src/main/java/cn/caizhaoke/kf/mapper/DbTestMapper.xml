@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.caizhaoke.kf.mapper.DbTestMapper">
+  <resultMap id="BaseResultMap" type="cn.caizhaoke.kf.entity.DbTest">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="db_test_id" jdbcType="VARCHAR" property="dbTestId" />
+    <result column="db_test_text" jdbcType="VARCHAR" property="dbTestText" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+</mapper>
